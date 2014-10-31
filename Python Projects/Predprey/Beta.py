@@ -12,8 +12,8 @@ screen=pygame.display.set_mode((width,height)) #Display Settings
 screen.fill((255,255,255))
 
 sizePred=20  #Sizes in pixels
-sizePrey=15
-velPred=0.01
+sizePrey=10
+velPred=1
 velPrey=0.01
 
 
@@ -25,12 +25,24 @@ class Predator(object):
         self.x=x
         self.y=y
         self.color=color
+        self.angle=random.uniform(0,2*math.pi)
+        self.velx=velPred
+        self.vely=velPred
     def drawPred(self):
         pygame.draw.circle(screen,self.color,(self.x,self.y),sizePred,4)
     def move(self):
-        angle=random.uniform(0,2*math.pi)
-        self.x=int(self.x+velPred*math.cos(angle))
-        self.y=int(self.y+velPred*math.sin(angle))
+        
+        self.x=int(self.x+self.velx)
+        self.y=int(self.y+self.vely)
+    def bounce(self):
+        if self.x<=sizePred or self.x>=width-sizePred:
+            self.velx=-self.velx
+        if self.y<=sizePred or self.y>=height-sizePred:
+            self.vely=-self.vely
+    def detect(self):
+        
+            
+            
         
         
 
@@ -80,9 +92,13 @@ while running: #Main Game Loop
         if event.type==pygame.QUIT:
             running=False
             pygame.quit()
+
     screen.fill((255,255,255))
+
     for predator in listPredators:
+        predator.bounce()
         predator.move()
+        
         predator.drawPred()
     for prey in listPrey:
         prey.drawPrey()
